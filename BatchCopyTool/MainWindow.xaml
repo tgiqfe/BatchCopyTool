@@ -1,0 +1,117 @@
+﻿<Window x:Class="BatchCopyTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BatchCopyTool"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="BatchCopyTool" Height="600" Width="840"
+        ResizeMode="NoResize"
+        Closing="Window_Closing"
+        MouseDown="Window_MouseDown"
+        PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Meiryo UI" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Meiryo UI" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="FontFamily" Value="Meiryo UI" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!-- Copy directory src/dst -->
+            <StackPanel Orientation="Vertical" Margin="5" Width="300">
+                <TextBlock Text="コピー元フォルダー (ローカルマシン)" />
+                <TextBox Name="Text_SourceDir"
+                         Text="{Binding SourcePath, Mode=TwoWay}"/>
+                <TextBlock Text="コピー先フォルダー (リモートマシン)"
+                           ToolTip="リモートPCの中でのパスを記述&#xa;例)&#xa;C:\ProgramData\Microsoft\Windows\Start Menu\Programs">
+                    <ToolTipService.InitialShowDelay>10</ToolTipService.InitialShowDelay>
+                </TextBlock>
+                <TextBox Name="Text_DestinationDir"
+                         Text="{Binding DestinationPath, Mode=TwoWay}" />
+            </StackPanel>
+
+            <!-- Account -->
+            <StackPanel Orientation="Vertical" Margin="5" Width="200">
+                <TextBlock Text="ドメイン名" />
+                <TextBox Name="Text_DomainName"
+                         Text="{Binding DefaultAccount.DomainName, Mode=TwoWay}"/>
+                <TextBlock Text="ユーザーID" />
+                <TextBox Name="Text_UserName"
+                         Text="{Binding DefaultAccount.UserName, Mode=TwoWay}" />
+                <TextBlock Text="パスワード" />
+                <Grid>
+                    <PasswordBox Name="Text_Password"
+                                 PasswordChanged="Text_Password_PasswordChanged" />
+                    <TextBox Name="Raw_Password" Visibility="Hidden"
+                             Text="{Binding DefaultAccount.RawPassword, Mode=TwoWay}"/>
+                    <materialDesign:PackIcon Name="Icon_ViewPassword"
+                                             Kind="EyeCheckOutline" 
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Width="32" />
+                    <Label Name="Label_ViewPassword" Height="32" Width="32"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Cursor="Hand"
+                           MouseDown="Label_ViewPassword_MouseDown" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Target machines -->
+            <StackPanel Orientation="Vertical" Margin="5">
+                <TextBlock Text="コピー先マシン" />
+                <TextBox Name="Text_TargetMachines"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         Width="160"
+                         Height="100"/>
+            </StackPanel>
+
+            <!-- Pre control button -->
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Button Name="Button_Precheck"
+                        Content="事前確認"
+                        Width="100" Height="30"
+                        Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <DataGrid Name="Data_Results"
+                      AutoGenerateColumns="True"/>
+        </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <Button Name="Button_StartCopy"
+                    Content="コピー開始"
+                    Width="100" Height="30"
+                    Margin="5"/>
+            <Button Name="Button_StopCopy"
+                    Content="コピー停止"
+                    Width="100" Height="30"
+                    Margin="5"/>
+            <Button Name="Button_Exit"
+                    Content="終了"
+                    Width="100" Height="30"
+                    Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
